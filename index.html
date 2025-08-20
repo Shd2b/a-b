@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ميلاد أروني</title>
+<style>
+  body{
+    margin:0; height:100vh; overflow:hidden;
+    background:linear-gradient(135deg,#ffe6f0,#ffd1e6);
+    display:flex; align-items:center; justify-content:center;
+    font-family: -apple-system,Segoe UI,Tahoma,sans-serif;
+    cursor:pointer;
+    position:relative;
+  }
+
+  /* قلوب صغيرة متطايرة على شكل SVG */
+  .floating-heart{
+    position:fixed; width:20px; height:20px;
+    z-index:0; opacity:.9;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    animation: float var(--dur) linear forwards;
+  }
+
+  @keyframes float{
+    0%{ transform: translateY(100vh) scale(var(--s)); opacity:0.95; }
+    100%{ transform: translateY(-20vh) scale(calc(var(--s)*1.2)); opacity:0; }
+  }
+
+  /* قلب كبير مع لمعان */
+  .big-heart-container{
+    position:absolute;
+    width:60vmin; height:60vmin; 
+    z-index:3; opacity:0; transition:opacity 1s ease;
+    display:flex; align-items:center; justify-content:center;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+    animation: pulse 2s ease-in-out infinite alternate, glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse{
+    0%{ transform: scale(1); }
+    50%{ transform: scale(1.08); }
+    100%{ transform: scale(1); }
+  }
+
+  @keyframes glow{
+    0%{ filter: drop-shadow(0 6px 12px rgba(255,107,129,0.4)); }
+    50%{ filter: drop-shadow(0 12px 24px rgba(255,107,129,0.7)); }
+    100%{ filter: drop-shadow(0 6px 12px rgba(255,107,129,0.4)); }
+  }
+
+  .big-heart-container svg{
+    width:100%; height:100%;
+  }
+
+  .heart-text{
+    position:absolute;
+    color:#fff; font-size:6vmin; font-weight:bold; text-align:center;
+    width:80%; height:auto;
+    display:flex; align-items:center; justify-content:center;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .show{opacity:1;}
+</style>
+</head>
+<body>
+  <!-- القلب الكبير -->
+  <div class="big-heart-container" id="bigHeart">
+    <svg viewBox="0 0 32 29.6">
+      <path d="M23.6,0c-2.9,0-5.4,1.9-6.6,4.6C15.8,1.9,13.3,0,10.4,0C4.6,0,0,4.6,0,10.4
+      c0,11.6,16,19.2,16,19.2s16-7.6,16-19.2C32,4.6,27.4,0,23.6,0z" fill="#ff6b81"/>
+    </svg>
+    <div class="heart-text" id="heartText">كل عام وأنتِ بخير أروني 💖🦕</div>
+  </div>
+
+<script>
+  const bigHeart = document.getElementById('bigHeart');
+  const heartText = document.getElementById('heartText');
+  let revealed = false;
+  let toggleText = true;
+
+  function spawnHeart(x, y){
+    const div = document.createElement('div');
+    div.className = 'floating-heart';
+    div.style.left = (x || Math.random()*100)+'vw';
+    div.style.top = (y || Math.random()*100)+'vh';
+    div.style.setProperty('--dur', (Math.random()*3+3)+'s');
+    div.style.setProperty('--s', Math.random()*0.6+0.5);
+    
+    div.innerHTML = `<svg viewBox="0 0 32 29.6"><path d="M23.6,0c-2.9,0-5.4,1.9-6.6,4.6C15.8,1.9,13.3,0,10.4,0C4.6,0,0,4.6,0,10.4
+      c0,11.6,16,19.2,16,19.2s16-7.6,16-19.2C32,4.6,27.4,0,23.6,0z" fill="#ff6b81"/></svg>`;
+    
+    document.body.appendChild(div);
+    setTimeout(()=>div.remove(), 5000);
+  }
+
+  function explodeHearts(){
+    for(let i=0;i<100;i++){
+      setTimeout(()=>spawnHeart(50 + (Math.random()*60-30), 50 + (Math.random()*40-20)), i*20);
+    }
+  }
+
+  setInterval(()=>spawnHeart(), 500);
+
+  document.body.addEventListener('click', ()=>{
+    if(!revealed){
+      bigHeart.classList.add('show');
+      explodeHearts();
+      setInterval(()=>{
+        if(toggleText){
+          heartText.textContent = "كل عام وأنتِ بخير أروني 💖🦕";
+        } else {
+          heartText.textContent = "Happy Birthday Aroony 💖🦕";
+        }
+        toggleText = !toggleText;
+      }, 2000);
+      revealed = true;
+    } else {
+      explodeHearts();
+    }
+  });
+</script>
+</body>
+</html>
